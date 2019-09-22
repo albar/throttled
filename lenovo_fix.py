@@ -185,6 +185,12 @@ def is_on_battery(config):
                 return not bool(int(f.read()))
         raise
     except:
+        warning('No valid Sysfs_Power_Path found! Trying TLP Power Status')
+    try:
+        with open('/run/tlp/last_pwr') as tlp:
+            return bool(int(tlp.read()))
+        raise
+    except:
         warning('No valid Sysfs_Power_Path found! Trying upower method #1')
     try:
         out = subprocess.check_output(('upower', '-i', '/org/freedesktop/UPower/devices/line_power_AC'))
